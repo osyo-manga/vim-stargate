@@ -1,0 +1,72 @@
+*stargate.txt*	include を挿入するプラグイン
+
+
+==============================================================================
+概要						*stargate-introduction*
+
+*stargate.vim* はバッファに include 文を挿入する為のプラグインです。
+
+
+==============================================================================
+使い方						*stargate-usage*
+>
+	" インクルードディレクトリのパスを設定
+	let g:stargate#include_paths = [
+	\	"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++"
+	\	"C:/cpp/boost"
+	\]
+
+	" #include <boost/any.hpp> を挿入するう
+	StargateInclude boost/any.hpp
+<
+
+
+==============================================================================
+インターフェース				*stargate-interface*
+
+------------------------------------------------------------------------------
+コマンド					*stargate-commands*
+
+:StargateInclude {filename}			*:StargateInclude*
+	"#include <{filename}>" をバッファに挿入します。
+	挿入される位置はカーソル位置から後方の最後に include 文が書かれている
+	箇所です。
+	また、include 文が見つからなけれればバッファの先頭から最初の空白行の位
+	置に挿入が行われます。
+
+
+==============================================================================
+設定						*stargate-setting*
+
+------------------------------------------------------------------------------
+stargate の変数					*stargate-variables*
+
+g:stargate#include_format			*g:stargate#include_format*
+	include の定型文を設定します。
+	これは次のように辞書で設定することができます。
+Default: >
+	let g:stargate#include_format = {
+	\	"_" : "%s",
+	\	"include_square_parentheses" : "#include <%s>",
+	\	"include_double_quotation"   : '#include "%s"',
+	\	"require_single_quotation"   : "require '%s'",
+	\	"load_single_quotation"      : "load '%s'",
+	\	"import " : "import %s",
+	\}
+<
+
+g:stargate#include_default_format	*g:stargate#include_default_format*
+	|:StargateInclude| 時に使用する include の定型文を |filetype| ごとに設
+	定します。
+	ここで設定する値は |g:stargate#include_format| のキー名になります。
+Default: >
+	let g:stargate#include_default_format = {
+	\	"c"      : "include_square_parentheses",
+	\	"cpp"    : "include_square_parentheses",
+	\	"ruby"   : "require_single_quotation",
+	\	"python" : "import",
+	\}
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
