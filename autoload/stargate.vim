@@ -80,6 +80,9 @@ endfunction
 
 
 function! s:get_include_paths(keyword, filetype, paths)
+	if empty(a:paths)
+		return []
+	endif
 	let paths = a:paths
 	let exts = stargate#get_file_exts(a:filetype)
 	let bufdir = s:to_slashpath(fnamemodify(expand("%d"), ':p:h'))
