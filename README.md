@@ -7,7 +7,7 @@
 ```vim
 " Setting include paths.
 let g:stargate#include_paths = [
-\	"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++"
+\	"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
 \	"C:/cpp/boost"
 \]
 
