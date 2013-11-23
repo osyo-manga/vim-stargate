@@ -28,24 +28,33 @@ function! s:source.action_table.insert.func(candidates)
 endfunction
 
 
-function! s:source.hooks.on_init(args, context)
-	let filetype = getbufvar(unite#get_current_unite().prev_bufnr, "&filetype")
-	let a:context.source__stargate_dirs = stargate#get_include_paths(filetype)
-endfunction
-
-function! s:source.change_candidates(args, context) "{{{
+function! s:make_candidates(context)
 	let filetype = getbufvar(unite#get_current_unite().prev_bufnr, "&filetype")
 	let candidates = stargate#get_include_files(a:context.input, filetype, a:context.source__stargate_dirs)
-	return map(candidates, "{
+	return [a:context.input, map(candidates, "{
 \		'word' : v:val.word . (v:val.isdirectory ? '/'  : ''),
 \		'source__include_file' : v:val.word,
 \		'action__path' : v:val.path,
 \		'action__directory' : v:val.isdirectory ? v:val.path : fnamemodify(v:val.path, ':h'),
 \		'kind' : v:val.isdirectory ? 'directory' : 'file'
-\	}")
+\	}")]
+endfunction
+
+let s:candidates_cache = []
+function! s:source.hooks.on_init(args, context)
+	let filetype = getbufvar(unite#get_current_unite().prev_bufnr, "&filetype")
+	let a:context.source__stargate_dirs = stargate#get_include_paths(filetype)
+	let s:candidates_cache = s:make_candidates(a:context)
 endfunction
 
 
+function! s:source.change_candidates(args, context) "{{{
+	let input = a:context.input
+	if input =~ '/$' || len(a:context.input) <= len(s:candidates_cache[0])
+		let s:candidates_cache = s:make_candidates(a:context)
+	endif
+	return s:candidates_cache[1]
+endfunction
 
 
 let &cpo = s:save_cpo
