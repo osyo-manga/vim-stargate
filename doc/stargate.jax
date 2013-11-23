@@ -16,7 +16,7 @@
 	\	"C:/cpp/boost"
 	\]
 
-	" #include <boost/any.hpp> を挿入するう
+	" #include <boost/any.hpp> を挿入する
 	StargateInclude boost/any.hpp
 <
 
