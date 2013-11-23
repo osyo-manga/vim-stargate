@@ -6,10 +6,12 @@
 ##Usage
 ```vim
 " Setting include paths.
-let g:stargate#include_paths = [
-\	"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
-\	"C:/cpp/boost"
-\]
+let g:stargate#include_paths = {
+\   "cpp" : [
+\       "C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
+\       "C:/cpp/boost"
+\   ]
+\}
 
 " Insert "#include <boost/any.hpp>".
 StargateInclude boost/any.hpp

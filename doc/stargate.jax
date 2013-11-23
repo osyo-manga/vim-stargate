@@ -11,10 +11,12 @@
 使い方						*stargate-usage*
 >
 	" インクルードディレクトリのパスを設定
-	let g:stargate#include_paths = [
-	\	"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
-	\	"C:/cpp/boost"
-	\]
+	let g:stargate#include_paths = {
+	\	"cpp" : [
+	\		"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
+	\		"C:/cpp/boost"
+	\	]
+	\}
 
 	" #include <boost/any.hpp> を挿入する
 	StargateInclude boost/any.hpp
@@ -69,23 +71,33 @@ Default: >
 
 
 g:stargate#include_paths			*g:stargate#include_paths*
-	参照するインクルードディレクトリのパスをリストで設定します。
+	参照するインクルードディレクトリのパスを |filetype| をキーとした辞書で設
+	定します。
 	また、この変数以外にも 'path' に設定されているディレクトリもインクルー
 	ドディレクトリとして使用されます。
 Default: >
-	let g:stargate#include_paths = []
+	let g:stargate#include_paths = {}
 <
+Example: >
+	let g:stargate#include_paths = {
+	\	"cpp" : [
+	\		"C:/MinGW/lib/gcc/mingw32/4.6.2/include/c++",
+	\		"C:/cpp/boost"
+	\	]
+	\}
 	また、Linux 環境では一部のインクルードディレクトリが正しく認識されませ
 	ん。
 	C++ の標準ヘッダーを使用する場合は次のようにインクルードディレクトリを
 	設定する必要があります。
 	参照：https://github.com/osyo-manga/vim-marching/issues/4
 Example: >
-	let g:stargate#include_paths = filter(
-	\	split(glob('/usr/include/c++/*'), '\n') +
-	\	split(glob('/usr/include/*/c++/*'), '\n') +
-	\	split(glob('/usr/include/*/'), '\n'),
-	\	'isdirectory(v:val)')
+	let g:stargate#include_paths = {
+	\	"cpp" : filter(
+	\		split(glob('/usr/include/c++/*'), '\n') +
+	\		split(glob('/usr/include/*/c++/*'), '\n') +
+	\		split(glob('/usr/include/*/'), '\n'),
+	\		'isdirectory(v:val)')
+	\}
 <
 
 
