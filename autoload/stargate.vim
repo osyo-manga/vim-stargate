@@ -40,10 +40,6 @@ function! stargate#get_include_format(filetype)
 endfunction
 
 
-" let s:include_dirs = {
-" \	"c" : [],
-" \	"cpp" : [],
-" \}
 let g:stargate#include_paths = get(g:, "stargate#include_paths", {})
 
 function! stargate#get_include_paths(filetype)
@@ -79,7 +75,7 @@ function! s:glob(expr, dir)
 endfunction
 
 
-function! s:get_include_paths(keyword, filetype, paths)
+function! s:get_include_files(keyword, filetype, paths)
 	if empty(a:paths)
 		return []
 	endif
@@ -91,16 +87,36 @@ function! s:get_include_paths(keyword, filetype, paths)
 	let dirs = filter(map(copy(paths), 'v:val == "." ? bufdir : v:val'), 'isdirectory(v:val)')
 	let candidates = eval(join(map(dirs, "s:glob(glob, v:val)"), '+'))
 	let result = filter(candidates, 'empty(fnamemodify(v:val.word, ":e")) || index(exts, fnamemodify(v:val.word, ":e")) >= 0')
-" 	PP candidates
 	return result
 endfunction
 
 
+let s:cache = {}
+function! s:get_include_files_cache(keyword, filetype, paths, use_cache)
+	let key = a:keyword . '#' . a:filetype . '#' . string(a:paths)
+	if a:use_cache && has_key(s:cache, key)
+		return copy(s:cache[key])
+	endif
+	let result = s:get_include_files(a:keyword, a:filetype, a:paths)
+	let s:cache[key] = copy(result)
+	return result
+endfunction
+
+
+function! stargate#clear_cache()
+	let s:cache = {}
+endfunction
+
+
+let g:stargate#use_cache = get(g:, "stargate#use_cache", 0)
+
 function! stargate#get_include_files(...)
-	let keyword  = get(a:, 1, "")
-	let filetype = get(a:, 2, &filetype)
-	let paths    = get(a:, 3, stargate#get_include_paths(&filetype))
-	return s:get_include_paths(keyword, filetype, paths)
+	let keyword   = get(a:, 1, "")
+	let filetype  = get(a:, 2, &filetype)
+	let paths     = get(a:, 3, stargate#get_include_paths(&filetype))
+	let use_cache = get(a:, 4, g:stargate#use_cache)
+	return s:get_include_files_cache(keyword, filetype, paths, use_cache)
+" 	return s:get_include_paths(keyword, filetype, paths)
 endfunction
 
 

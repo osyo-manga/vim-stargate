@@ -36,6 +36,9 @@
 	また、include 文が見つからなけれればバッファの先頭から最初の空白行の位
 	置に挿入が行われます。
 
+:StargateClearCache				*:StargateClearCache*
+	キャッシュをクリアします。
+
 
 ==============================================================================
 設定						*stargate-setting*
@@ -98,6 +101,15 @@ Example: >
 	\		split(glob('/usr/include/*/'), '\n'),
 	\		'isdirectory(v:val)')
 	\}
+<
+
+g:stargate#use_cache				*g:stargate#use_cache*
+	1 が設定されていれば2回目以降はキャッシュしたデータを使用する用になり
+	ます。
+	このキャッシュは Vim が終了するまで有効です。
+	また、|:StargateClearCache| で削除する事もできます。
+Default: >
+	let g:stargate#use_cache = 0
 <
 
 
