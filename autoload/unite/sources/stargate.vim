@@ -16,6 +16,10 @@ let s:source = {
 \		"insert" : {
 \			"is_selectable" : 1,
 \		},
+\		"narrowing_word" : {
+\			"is_selectable" : 0,
+\			"is_quit" : 0,
+\		},
 \	},
 \	"hooks" : {},
 \}
@@ -48,7 +52,15 @@ function! s:source.hooks.on_init(args, context)
 endfunction
 
 
-function! s:source.change_candidates(args, context) "{{{
+function! s:source.action_table.narrowing_word.func(candidate)
+	let candidate = unite#helper#get_current_candidate()
+	call unite#mappings#narrowing(has_key(candidate, 'action__word')
+\		? candidate.action__word
+\		: candidate.word)
+endfunction
+
+
+function! s:source.change_candidates(args, context)
 	let input = a:context.input
 	if input =~ '/$' || len(a:context.input) <= len(s:candidates_cache[0])
 		let s:candidates_cache = s:make_candidates(a:context)
