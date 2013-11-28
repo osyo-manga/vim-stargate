@@ -124,7 +124,7 @@ function! s:include(file, format)
 	let lnum = search(&include, 'bnW')
 	if lnum == 0
 		" 一番上から最初の空白行の位置
-		let lnum = get(filter(map(getline(1, "."), 'v:val =~ ''^$'' ? v:key : -1'), 'v:val != -1'), 0, 1)
+		let lnum = get(filter(map(getline(1, "."), 'v:val =~ ''^$'' ? v:key : -1'), 'v:val != -1'), 0, 0)
 	endif
 	let file = substitute(a:file, '\\', '/', 'g')
 	let format = a:format
